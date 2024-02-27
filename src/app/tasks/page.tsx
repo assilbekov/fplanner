@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import Image from "next/image"
 import { z } from "zod"
+import { UserProfile, UserButton } from "@clerk/nextjs";
 
 
 
@@ -11,6 +12,7 @@ import { taskSchema } from "./data/schema"
 import type { MockTask } from "./data/tasks.mock"
 import { mockTasks } from "./data/tasks.mock"
 import { IncomeDialog } from "./components/IncomeDialog"
+import { Label } from "~/components/ui/label";
 
 export const metadata: Metadata = {
   title: "Tasks",
@@ -33,35 +35,12 @@ export default async function TaskPage() {
 
   return (
     <>
-      <div className="md:hidden">
-        <Image
-          src="/examples/tasks-light.png"
-          width={1280}
-          height={998}
-          alt="Playground"
-          className="block dark:hidden"
-        />
-        <Image
-          src="/examples/tasks-dark.png"
-          width={1280}
-          height={998}
-          alt="Playground"
-          className="hidden dark:block"
-        />
+      <div className="border-b flex justify-between items-center px-6 py-4">
+        <Label className="text-lg font-bold">FPlanner</Label>
+        <UserButton />
       </div>
       <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
-        <div className="flex items-center justify-between space-y-2">
-          <div>
-            <h2 className="text-2xl font-bold tracking-tight">Welcome back!</h2>
-            <p className="text-muted-foreground">
-              Here&apos;s a list of your tasks for this month!
-            </p>
-            <IncomeDialog />
-          </div>
-          <div className="flex items-center space-x-2">
-            <UserNav />
-          </div>
-        </div>
+        <IncomeDialog />
         <DataTable data={tasks} columns={columns} />
       </div>
     </>
