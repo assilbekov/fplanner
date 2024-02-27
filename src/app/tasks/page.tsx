@@ -1,12 +1,16 @@
-import { Metadata } from "next"
+import type { Metadata } from "next"
 import Image from "next/image"
 import { z } from "zod"
+
+
 
 import { columns } from "./components/columns"
 import { DataTable } from "./components/data-table"
 import { UserNav } from "./components/user-nav"
 import { taskSchema } from "./data/schema"
-import { MockTask, mockTasks } from "./data/tasks.mock"
+import type { MockTask } from "./data/tasks.mock"
+import { mockTasks } from "./data/tasks.mock"
+import { IncomeDialog } from "./components/IncomeDialog"
 
 export const metadata: Metadata = {
   title: "Tasks",
@@ -52,6 +56,7 @@ export default async function TaskPage() {
             <p className="text-muted-foreground">
               Here&apos;s a list of your tasks for this month!
             </p>
+            <IncomeDialog />
           </div>
           <div className="flex items-center space-x-2">
             <UserNav />
