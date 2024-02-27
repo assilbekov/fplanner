@@ -1,5 +1,3 @@
-import { promises as fs } from "fs"
-import path from "path"
 import { Metadata } from "next"
 import Image from "next/image"
 import { z } from "zod"
@@ -17,15 +15,13 @@ export const metadata: Metadata = {
 
 // Simulate a database read for tasks.
 async function getTasks() {
-  const data = await new Promise<string>(res => {
+  const tasks = await new Promise<MockTask[]>(res => {
     setTimeout(() => {
-      res(JSON.stringify(mockTasks))
+      res(mockTasks)
     }, 2000)
   });
 
-  const tasks = JSON.parse(data.toString())
-
-  return z.array(taskSchema).parse(tasks)
+  return z.array(taskSchema).parse(tasks);
 }
 
 export default async function TaskPage() {
