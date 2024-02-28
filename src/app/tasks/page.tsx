@@ -13,6 +13,10 @@ import type { MockTask } from "./data/tasks.mock"
 import { mockTasks } from "./data/tasks.mock"
 import { IncomeDialog } from "./components/IncomeDialog"
 import { Label } from "~/components/ui/label";
+import { InfoCard } from "./components/InfoCard";
+import { CurrentValueDialog } from "./components/CurrentValueDialog";
+import { InflationDialog } from "./components/InflationDialog";
+import { FinancialOverview } from "./components/FinancialOverview";
 
 export const metadata: Metadata = {
   title: "Tasks",
@@ -40,6 +44,11 @@ export default async function TaskPage() {
         <UserButton />
       </div>
       <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <InfoCard title="Total Revenue" value="$45,231.89" editDialog={<CurrentValueDialog />} />
+          <InfoCard title="Total Revenue" value="$45,231.89" editDialog={<InflationDialog />} />
+        </div>
+        <FinancialOverview />
         <IncomeDialog />
         <DataTable data={tasks} columns={columns} />
       </div>

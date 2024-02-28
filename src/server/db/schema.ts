@@ -26,9 +26,54 @@ export const posts = createTable(
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp("updatedAt"),
+    updatedAt: timestamp("updatedAt")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
   },
   (example) => ({
     nameIndex: index("name_idx").on(example.name),
+  })
+);
+
+export const finances = createTable(
+  "finance",
+  {
+    id: serial("id").primaryKey(),
+    name: varchar("name", { length: 256 }),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    userId: varchar("user_id").notNull(),
+    amount: serial("amount").notNull(),
+    type: varchar("type", { length: 256 }).notNull(),
+    startDate: timestamp("start_date").notNull(),
+    endDate: timestamp("end_date"),
+  },
+  (example) => ({
+    nameIndex: index("name_idx").on(example.name),
+  })
+);
+
+export const moneyState = createTable(
+  "money_state",
+  {
+    id: serial("id").primaryKey(),
+    userId: varchar("user_id").notNull(),
+
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+
+    currentMoney: serial("current_money").notNull(),
+    inflation: serial("inflation").notNull(),
+  },
+  (example) => ({
+    nameIndex: index("userId").on(example.userId),
   })
 );

@@ -1,4 +1,6 @@
 import { postRouter } from "~/server/api/routers/post";
+import { financeRouter } from "~/server/api/routers/finances";
+import { moneyStateRouter } from "~/server/api/routers/moneyStates";
 import { createTRPCRouter } from "~/server/api/trpc";
 
 /**
@@ -8,6 +10,8 @@ import { createTRPCRouter } from "~/server/api/trpc";
  */
 export const appRouter = createTRPCRouter({
   post: postRouter,
+  finance: financeRouter,
+  moneyState: moneyStateRouter,
 });
 
 // export type definition of API

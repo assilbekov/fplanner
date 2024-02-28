@@ -22,7 +22,7 @@ import { CalendarIcon } from "@radix-ui/react-icons"
 import { Calendar } from "~/components/ui/calendar"
 import { Label } from "~/components/ui/label"
 
-const formSchema = z.object({
+export const createFinancePlanFormSchema = z.object({
   name: z.string().min(1, {
     message: "Name is required.",
   }),
@@ -35,8 +35,8 @@ const formSchema = z.object({
 
 export function FinancePlanForm() {
   // 1. Define your form.
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof createFinancePlanFormSchema>>({
+    resolver: zodResolver(createFinancePlanFormSchema),
     defaultValues: {
       name: "",
       type: "income",
@@ -47,7 +47,7 @@ export function FinancePlanForm() {
   })
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: z.infer<typeof createFinancePlanFormSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values)
