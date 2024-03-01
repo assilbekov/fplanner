@@ -6,6 +6,7 @@ import {
   index,
   pgTableCreator,
   serial,
+  real,
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -70,9 +71,9 @@ export const moneyState = createTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
 
-    currentMoney: serial("current_money").notNull(),
-    inflation: serial("inflation").notNull(),
-    yearsPlanning: serial("years_planning").notNull(),
+    currentMoney: real("current_money").notNull(),
+    inflation: real("inflation").notNull(),
+    yearsPlanning: real("years_planning").notNull(),
   },
   (example) => ({
     nameIndex: index("userId").on(example.userId),

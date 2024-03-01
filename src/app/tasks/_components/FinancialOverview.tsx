@@ -92,7 +92,7 @@ type FinancialOverviewProps = {
 }
 
 export function FinancialOverview({ finances, initialCash }: FinancialOverviewProps) {
-  console.log({ finances, initialCash, transformFinancesIntoChart: transformFinancesIntoChart(finances, initialCash) })
+  //console.log({ finances, initialCash, transformFinancesIntoChart: transformFinancesIntoChart(finances, initialCash) })
   return (
     <ResponsiveContainer width="100%" height={350}>
       <BarChart data={transformFinancesIntoChart(finances, initialCash)}>

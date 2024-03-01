@@ -21,6 +21,7 @@ import {
   FormMessage,
 } from "~/components/ui/form"
 import { Input } from "~/components/ui/input"
+import { api } from "~/trpc/react"
 //import { api } from "~/trpc/server"
 
 
@@ -33,6 +34,7 @@ type EditYearsPlanningFormProps = {
 }
 
 export function EditYearsPlanningForm() {
+  const {mutate} = api.moneyState.updateYearsPlanning.useMutation();
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -48,6 +50,7 @@ export function EditYearsPlanningForm() {
     console.log(values)
     //api.moneyState.updateYearsPlanning.mutate({ yearsPlanning: values.yearsPlanning})
     //api.moneyState.updateYearsPlanning.mutate({ yearsPlanning: values.yearsPlanning})
+    mutate({ yearsPlanning: values.yearsPlanning});
   }
 
   return (
