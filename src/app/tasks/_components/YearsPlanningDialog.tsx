@@ -21,7 +21,7 @@ import {
   FormMessage,
 } from "~/components/ui/form"
 import { Input } from "~/components/ui/input"
-import { api } from "~/trpc/server"
+//import { api } from "~/trpc/server"
 
 
 const formSchema = z.object({
@@ -46,6 +46,7 @@ export function EditYearsPlanningForm() {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values)
+    //api.moneyState.updateYearsPlanning.mutate({ yearsPlanning: values.yearsPlanning})
     //api.moneyState.updateYearsPlanning.mutate({ yearsPlanning: values.yearsPlanning})
   }
 

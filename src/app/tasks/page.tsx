@@ -5,19 +5,19 @@ import { UserProfile, UserButton } from "@clerk/nextjs";
 
 
 
-import { columns } from "./components/columns"
-import { DataTable } from "./components/data-table"
-import { UserNav } from "./components/user-nav"
+import { columns } from "./_components/columns"
+import { DataTable } from "./_components/data-table"
+import { UserNav } from "./_components/user-nav"
 import { taskSchema } from "./data/schema"
 import type { MockTask } from "./data/tasks.mock"
 import { mockTasks } from "./data/tasks.mock"
-import { IncomeDialog } from "./components/IncomeDialog"
+import { IncomeDialog } from "./_components/IncomeDialog"
 import { Label } from "~/components/ui/label";
-import { InfoCard } from "./components/InfoCard";
-import { CurrentValueDialog } from "./components/CurrentValueDialog";
-import { InflationDialog } from "./components/InflationDialog";
-import { FinancialOverview } from "./components/FinancialOverview";
-import { YearsPlanningDialog } from "./components/YearsPlanningDialog";
+import { InfoCard } from "./_components/InfoCard";
+import { CurrentValueDialog } from "./_components/CurrentValueDialog";
+import { InflationDialog } from "./_components/InflationDialog";
+import { FinancialOverview } from "./_components/FinancialOverview";
+import { YearsPlanningDialog } from "./_components/YearsPlanningDialog";
 import { api } from "~/trpc/server";
 
 export const metadata: Metadata = {

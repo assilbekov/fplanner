@@ -1,3 +1,5 @@
+"use client"
+
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -19,12 +21,14 @@ import {
   FormMessage,
 } from "~/components/ui/form"
 import { Input } from "~/components/ui/input"
+//import { api } from "~/trpc/react"
 
 const formSchema = z.object({
   inflation: z.coerce.number().min(1, { message: "Amount must be at least 1" }),
 })
 
 export function InflationDialogForm() {
+  //const {mutate} =  api.moneyState.updateYearsPlanning.useMutation();
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -38,6 +42,7 @@ export function InflationDialogForm() {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values)
+    //mutate({ yearsPlanning: values.inflation});
   }
 
   return (
