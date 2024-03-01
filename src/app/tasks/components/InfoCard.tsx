@@ -10,6 +10,7 @@ type InfoCardProps = {
   title: string
   value: string
   editDialog: React.ReactNode
+  description: string;
 }
 
 export function InfoCard(props: InfoCardProps) {
@@ -24,7 +25,7 @@ export function InfoCard(props: InfoCardProps) {
       <CardContent>
         <div className="text-2xl font-bold">{props.value}</div>
         <p className="text-xs text-muted-foreground">
-          +20.1% from last month
+          {props.description}
         </p>
       </CardContent>
     </Card>

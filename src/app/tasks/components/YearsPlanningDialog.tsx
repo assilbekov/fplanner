@@ -1,3 +1,5 @@
+"use client"
+
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -19,25 +21,32 @@ import {
   FormMessage,
 } from "~/components/ui/form"
 import { Input } from "~/components/ui/input"
+import { api } from "~/trpc/server"
+
 
 const formSchema = z.object({
-  inflation: z.coerce.number().min(1, { message: "Amount must be at least 1" }),
+  yearsPlanning: z.coerce.number().min(1, { message: "Planning years be at least 1" }),
 })
 
-export function InflationDialogForm() {
+type EditYearsPlanningFormProps = {
+  id: number
+}
+
+export function EditYearsPlanningForm() {
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      inflation: 0,
+      yearsPlanning: 0,
     },
-  })
+  });
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values)
+    //api.moneyState.updateYearsPlanning.mutate({ yearsPlanning: values.yearsPlanning})
   }
 
   return (
@@ -45,10 +54,10 @@ export function InflationDialogForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 pt-8">
         <FormField
           control={form.control}
-          name="inflation"
+          name="yearsPlanning"
           render={({ field }) => (
             <FormItem >
-              <FormLabel>Inflation</FormLabel>
+              <FormLabel>Current value</FormLabel>
               <FormControl>
                 <Input type="number" {...field} />
               </FormControl>
@@ -65,7 +74,7 @@ export function InflationDialogForm() {
 }
 
 
-export function InflationDialog() {
+export function YearsPlanningDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -86,8 +95,8 @@ export function InflationDialog() {
       </DialogTrigger>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Update inflation</DialogTitle>
-          <InflationDialogForm />
+          <DialogTitle>Edit current value</DialogTitle>
+          <EditYearsPlanningForm />
         </DialogHeader>
       </DialogContent>
     </Dialog>

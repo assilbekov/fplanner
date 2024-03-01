@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { currentUser } from "@clerk/nextjs";
-import { createFinancePlanFormSchema } from "~/app/tasks/components/FinancePlanForm";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { moneyState } from "~/server/db/schema";
@@ -23,14 +22,15 @@ export const moneyStateRouter = createTRPCRouter({
       });
     }),
 
-  create: publicProcedure
-    .input(createFinancePlanFormSchema)
-    .mutation(async ({ ctx, input }) => {
+  getFirstByUserId: publicProcedure
+    .query(async ({ ctx }) => {
       const user = await currentUser();
       if (!user) {
         throw new Error("User not found");
       }
-      await ctx.db.insert(moneyState).values({ ...input, userId: user.id });
+      return ctx.db.query.moneyState.findFirst({
+        where: eq(moneyState.userId, user.id),
+      });
     }),
 
   updateInflation: publicProcedure
@@ -71,14 +71,28 @@ export const moneyStateRouter = createTRPCRouter({
       await ctx.db.update(moneyState).set({ currentMoney: input.currentMoney }).where(eq(moneyState.id, input.id));
     }),
 
-  update: publicProcedure
-    .input(z.object({ id: z.number() }).merge(createFinancePlanFormSchema))
+  updateYearsPlanning: publicProcedure
+    .input(z.object({ yearsPlanning: z.number() }))
     .mutation(async ({ ctx, input }) => {
       const user = await currentUser();
       if (!user) {
         throw new Error("User not found");
       }
-      await ctx.db.update(moneyState).set({ ...input, userId: user.id }).where(eq(moneyState.id, input.id));
+
+      const state = await ctx.db.query.moneyState.findFirst({
+        where: eq(moneyState.userId, user.id),
+      })
+      if (!state) {
+        await ctx.db.insert(moneyState).values({
+          yearsPlanning: input.yearsPlanning,
+          currentMoney: 0,
+          inflation: 3.4,
+          userId: user.id
+        });
+        return;
+      }
+
+      await ctx.db.update(moneyState).set({ yearsPlanning: input.yearsPlanning }).where(eq(moneyState.userId, user.id),);
     }),
 
   delete: publicProcedure

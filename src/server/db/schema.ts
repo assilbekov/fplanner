@@ -53,7 +53,7 @@ export const finances = createTable(
     endDate: timestamp("end_date"),
   },
   (example) => ({
-    nameIndex: index("name_idx").on(example.name),
+    nameIndex: index("finance_name_idx").on(example.name),
   })
 );
 
@@ -72,6 +72,7 @@ export const moneyState = createTable(
 
     currentMoney: serial("current_money").notNull(),
     inflation: serial("inflation").notNull(),
+    yearsPlanning: serial("years_planning").notNull(),
   },
   (example) => ({
     nameIndex: index("userId").on(example.userId),

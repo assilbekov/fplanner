@@ -17,6 +17,8 @@ import { InfoCard } from "./components/InfoCard";
 import { CurrentValueDialog } from "./components/CurrentValueDialog";
 import { InflationDialog } from "./components/InflationDialog";
 import { FinancialOverview } from "./components/FinancialOverview";
+import { YearsPlanningDialog } from "./components/YearsPlanningDialog";
+import { api } from "~/trpc/server";
 
 export const metadata: Metadata = {
   title: "Tasks",
@@ -34,8 +36,33 @@ async function getTasks() {
   return z.array(taskSchema).parse(tasks);
 }
 
+const year = 24 * 60 * 60 * 1000 * 365;
+
+const financesData = [{
+  name: "Finances",
+  amount: 1000,
+  startDate: new Date("2021-01-01"),
+  endDate: new Date("2021-06-06"),
+  interestRate: 10,
+}, {
+  name: "Finances",
+  amount: 1000,
+  startDate: new Date("2024-06-06"),
+  endDate: new Date("2026-01-01"),
+  interestRate: 10,
+}, {
+  name: "Finances",
+  amount: -1000,
+  startDate: new Date("2022-01-01"),
+  endDate: new Date("2023-04-04"),
+  interestRate: 10,
+}]
+
 export default async function TaskPage() {
   const tasks = await getTasks()
+  const moneyState = await api.moneyState.getFirstByUserId.query();
+
+  console.log(moneyState);
 
   return (
     <>
@@ -45,10 +72,26 @@ export default async function TaskPage() {
       </div>
       <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <InfoCard title="Total Revenue" value="$45,231.89" editDialog={<CurrentValueDialog />} />
-          <InfoCard title="Total Revenue" value="$45,231.89" editDialog={<InflationDialog />} />
+          <InfoCard
+            title="Cash"
+            value="$45,231.89"
+            description="How much money in cash you currently have"
+            editDialog={<CurrentValueDialog />}
+          />
+          <InfoCard
+            title="Planning years"
+            value="10"
+            description="For how many years you want to plan"
+            editDialog={<YearsPlanningDialog />}
+          />
+          <InfoCard
+            title="Inflation"
+            value="4%"
+            description="Average inflation rate"
+            editDialog={<InflationDialog />}
+          />
         </div>
-        <FinancialOverview />
+        <FinancialOverview finances={financesData} initialCash={3000} />
         <IncomeDialog />
         <DataTable data={tasks} columns={columns} />
       </div>

@@ -1,10 +1,19 @@
 import { z } from "zod";
 import { currentUser } from "@clerk/nextjs";
-import { createFinancePlanFormSchema } from "~/app/tasks/components/FinancePlanForm";
+//import { createFinancePlanFormSchema } from "~/app/tasks/components/FinancePlanForm";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { finances } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
+
+export const createFinancePlanFormSchema = z.object({
+  name: z.string(),
+  type: z.enum(["income", "expense"]),
+  monthlyAmount: z.number(),
+  interestRate: z.number(),
+  startDate: z.date(),
+  endDate: z.date().optional(),
+})
 
 export const financeRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
