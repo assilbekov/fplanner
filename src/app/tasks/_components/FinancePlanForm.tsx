@@ -21,6 +21,9 @@ import { cn } from "~/lib/utils"
 import { CalendarIcon } from "@radix-ui/react-icons"
 import { Calendar } from "~/components/ui/calendar"
 import { Label } from "~/components/ui/label"
+import { api } from "~/trpc/react"
+import { Dispatch, SetStateAction } from "react"
+import { revalidatePath, revalidateTag } from "next/cache"
 
 export const createFinancePlanFormSchema = z.object({
   name: z.string().min(1, {
@@ -33,7 +36,12 @@ export const createFinancePlanFormSchema = z.object({
   endDate: z.date().optional(),
 })
 
-export function FinancePlanForm() {
+type FinancePlanFormProps = {
+  setOpen: Dispatch<SetStateAction<boolean>>;
+}
+
+export function FinancePlanForm({setOpen}: FinancePlanFormProps) {
+  const { mutate, mutateAsync, isLoading } = api.finance.create.useMutation();
   // 1. Define your form.
   const form = useForm<z.infer<typeof createFinancePlanFormSchema>>({
     resolver: zodResolver(createFinancePlanFormSchema),
@@ -47,10 +55,14 @@ export function FinancePlanForm() {
   })
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof createFinancePlanFormSchema>) {
+  async function onSubmit(values: z.infer<typeof createFinancePlanFormSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values)
+    await mutateAsync(values)
+    setOpen(false);
+    revalidateTag("tasks")
+    revalidatePath("/tasks");
   }
 
   return (
@@ -204,7 +216,7 @@ export function FinancePlanForm() {
           />
         </div>
         <div className="flex justify-end">
-          <Button type="submit">Submit</Button>
+          <Button disabled={isLoading} type="submit">Submit</Button>
         </div>
       </form>
     </Form>

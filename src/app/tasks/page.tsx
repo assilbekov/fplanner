@@ -61,6 +61,7 @@ const financesData = [{
 export default async function TaskPage() {
   const tasks = await getTasks()
   const moneyState = await api.moneyState.getFirstByUserId.query();
+  const finances = await api.finance.getAll.query();
 
   console.log(moneyState);
 
@@ -74,23 +75,32 @@ export default async function TaskPage() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <InfoCard
             title="Cash"
-            value="$45,231.89"
+            value={String(moneyState?.currentMoney || "0")}
             description="How much money in cash you currently have"
             editDialog={<CurrentValueDialog />}
           />
           <InfoCard
             title="Planning years"
-            value="10"
+            value={String(moneyState?.yearsPlanning || "10")}
             description="For how many years you want to plan"
             editDialog={<YearsPlanningDialog />}
           />
           <InfoCard
             title="Inflation"
-            value="4%"
+            value={String(moneyState?.inflation || "0")}
             description="Average inflation rate"
             editDialog={<InflationDialog />}
           />
         </div>
+        {finances.map((finance) => (
+          <div key={finance.id}>
+            <p>{finance.name}</p>
+            <p>{finance.amount}</p>
+            <p>{JSON.stringify(finance.startDate)}</p>
+            <p>{JSON.stringify(finance.endDate)}</p>
+            <p>{finance.userId}</p>
+          </div>
+        ))}
         <FinancialOverview finances={financesData} initialCash={3000} />
         <IncomeDialog />
         <DataTable data={tasks} columns={columns} />
