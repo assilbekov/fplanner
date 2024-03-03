@@ -19,6 +19,7 @@ import { InflationDialog } from "./_components/InflationDialog";
 import { FinancialOverview } from "./_components/FinancialOverview";
 import { YearsPlanningDialog } from "./_components/YearsPlanningDialog";
 import { api } from "~/trpc/server";
+import { FinancesTable } from "./_components/FinancesTable";
 
 export const metadata: Metadata = {
   title: "Tasks",
@@ -63,7 +64,7 @@ export default async function TaskPage() {
   const moneyState = await api.moneyState.getFirstByUserId.query();
   const finances = await api.finance.getAll.query();
 
-  console.log(moneyState);
+  //console.log(moneyState);
 
   return (
     <>
@@ -103,6 +104,7 @@ export default async function TaskPage() {
         ))}
         <FinancialOverview finances={financesData} initialCash={3000} />
         <IncomeDialog />
+        <FinancesTable finances={finances} />
         <DataTable data={tasks} columns={columns} />
       </div>
     </>

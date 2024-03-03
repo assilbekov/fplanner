@@ -22,8 +22,10 @@ import { CalendarIcon } from "@radix-ui/react-icons"
 import { Calendar } from "~/components/ui/calendar"
 import { Label } from "~/components/ui/label"
 import { api } from "~/trpc/react"
-import { Dispatch, SetStateAction } from "react"
+import { Dispatch, SetStateAction, useRef } from "react"
 import { revalidatePath, revalidateTag } from "next/cache"
+import { useFormState } from "react-dom"
+import { onCreateFinancePlanAction } from "../_actions/createFinancePlan"
 
 export const createFinancePlanFormSchema = z.object({
   name: z.string().min(1, {
@@ -40,8 +42,11 @@ type FinancePlanFormProps = {
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export function FinancePlanForm({setOpen}: FinancePlanFormProps) {
-  const { mutate, mutateAsync, isLoading } = api.finance.create.useMutation();
+export function FinancePlanForm({ setOpen }: FinancePlanFormProps) {
+  const formRef = useRef<HTMLFormElement>(null);
+  const [state, formAction] = useFormState(onCreateFinancePlanAction, { message: "" });
+
+  const { mutateAsync, isLoading } = api.finance.create.useMutation();
   // 1. Define your form.
   const form = useForm<z.infer<typeof createFinancePlanFormSchema>>({
     resolver: zodResolver(createFinancePlanFormSchema),
@@ -51,6 +56,7 @@ export function FinancePlanForm({setOpen}: FinancePlanFormProps) {
       interestRate: 0,
       startDate: new Date(),
       endDate: undefined,
+      ...state?.fields
     },
   })
 
@@ -65,9 +71,24 @@ export function FinancePlanForm({setOpen}: FinancePlanFormProps) {
     revalidatePath("/tasks");
   }
 
+  console.log({ state })
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        ref={formRef}
+        action={formAction}
+        //onSubmit={form.handleSubmit(onSubmit)} 
+        onSubmit={(evt) => {
+          evt.preventDefault();
+          evt?.stopPropagation();
+          form.handleSubmit(() => {
+            formRef.current?.submit();
+            //formRef.current?.requestSubmit();
+          })(evt);
+        }}
+        className="space-y-8"
+      >
         <FormField
           control={form.control}
           name="name"
