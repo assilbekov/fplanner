@@ -43,8 +43,6 @@ type FinancePlanFormProps = {
 }
 
 export function FinancePlanForm({ setOpen }: FinancePlanFormProps) {
-  const formRef = useRef<HTMLFormElement>(null);
-  const [state, formAction] = useFormState(onCreateFinancePlanAction, { message: "" });
 
   const { mutateAsync, isLoading } = api.finance.create.useMutation();
   // 1. Define your form.
@@ -56,7 +54,6 @@ export function FinancePlanForm({ setOpen }: FinancePlanFormProps) {
       interestRate: 0,
       startDate: new Date(),
       endDate: undefined,
-      ...state?.fields
     },
   })
 
@@ -67,28 +64,11 @@ export function FinancePlanForm({ setOpen }: FinancePlanFormProps) {
     console.log(values)
     await mutateAsync(values)
     setOpen(false);
-    revalidateTag("tasks")
-    revalidatePath("/tasks");
   }
-
-  console.log({ state })
 
   return (
     <Form {...form}>
-      <form
-        ref={formRef}
-        action={formAction}
-        //onSubmit={form.handleSubmit(onSubmit)} 
-        onSubmit={(evt) => {
-          evt.preventDefault();
-          evt?.stopPropagation();
-          form.handleSubmit(() => {
-            formRef.current?.submit();
-            //formRef.current?.requestSubmit();
-          })(evt);
-        }}
-        className="space-y-8"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
           name="name"
