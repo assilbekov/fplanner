@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Image from "next/image"
 import { z } from "zod"
 import { UserProfile, UserButton } from "@clerk/nextjs";
+import { unstable_noStore as noStore } from 'next/cache';
 
 
 
@@ -11,7 +12,7 @@ import { UserNav } from "./_components/user-nav"
 import { taskSchema } from "./data/schema"
 import type { MockTask } from "./data/tasks.mock"
 import { mockTasks } from "./data/tasks.mock"
-import { IncomeDialog } from "./_components/IncomeDialog"
+import { CreateFinanceDialog } from "./_components/CreateFinanceDialog"
 import { Label } from "~/components/ui/label";
 import { InfoCard } from "./_components/InfoCard";
 import { CurrentValueDialog } from "./_components/CurrentValueDialog";
@@ -103,7 +104,7 @@ export default async function TaskPage() {
           </div>
         ))}
         <FinancialOverview finances={financesData} initialCash={3000} />
-        <IncomeDialog />
+        <CreateFinanceDialog />
         <FinancesTable finances={finances} />
         <DataTable data={tasks} columns={columns} />
       </div>

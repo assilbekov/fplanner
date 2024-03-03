@@ -24,7 +24,7 @@ import { Label } from "~/components/ui/label"
 import { api } from "~/trpc/react"
 import { Dispatch, SetStateAction } from "react"
 
-export const createFinancePlanFormSchema = z.object({
+export const financeFormSchema = z.object({
   name: z.string().min(1, {
     message: "Name is required.",
   }),
@@ -35,37 +35,31 @@ export const createFinancePlanFormSchema = z.object({
   endDate: z.date().optional(),
 })
 
-type FinancePlanFormProps = {
+export type FinanceFormInfered = z.infer<typeof financeFormSchema>
+
+export type FinancePlanFormProps = {
   setOpen: Dispatch<SetStateAction<boolean>>;
+  isLoading: boolean;
+  onSubmit: (values: z.infer<typeof financeFormSchema>) => Promise<void>;
+  defaultValues?: Partial<FinanceFormInfered>;
 }
 
-export function FinancePlanForm({ setOpen }: FinancePlanFormProps) {
-
-  const { mutateAsync, isLoading } = api.finance.create.useMutation();
+export function FinancePlanForm({ setOpen, onSubmit, isLoading, defaultValues }: FinancePlanFormProps) {
   // 1. Define your form.
-  const form = useForm<z.infer<typeof createFinancePlanFormSchema>>({
-    resolver: zodResolver(createFinancePlanFormSchema),
-    defaultValues: {
-      name: "",
-      type: "income",
-      interestRate: 0,
-      startDate: new Date(),
-      endDate: undefined,
-    },
-  })
+  const form = useForm<FinanceFormInfered>({
+    resolver: zodResolver(financeFormSchema),
+    defaultValues,
+  });
 
   // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof createFinancePlanFormSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
-    await mutateAsync(values)
+  async function _onSubmit(values: z.infer<typeof financeFormSchema>) {
+    await onSubmit(values)
     setOpen(false);
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(_onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
           name="name"

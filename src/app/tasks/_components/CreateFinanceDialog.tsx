@@ -8,10 +8,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog"
-import { FinancePlanForm } from "./FinancePlanForm"
+import { FinancePlanForm, FinancePlanFormProps } from "./FinancePlanForm"
 import { use, useState } from "react"
 
-export function IncomeDialog() {
+type CreateFinanceDialogProps = Omit<FinancePlanFormProps, "setOpen">;
+
+export function CreateFinanceDialog(props: CreateFinanceDialogProps) {
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -22,7 +24,7 @@ export function IncomeDialog() {
         <DialogHeader>
           <DialogTitle>Create financial flow</DialogTitle>
         </DialogHeader>
-        <FinancePlanForm setOpen={setOpen} />
+        <FinancePlanForm setOpen={setOpen} {...props} />
       </DialogContent>
     </Dialog>
   )
