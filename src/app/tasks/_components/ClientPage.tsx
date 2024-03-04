@@ -58,7 +58,11 @@ export const ClientPage = (props: ClientPageProps) => {
           }
         />
       </div>
-      {/* <FinancialOverview finances={finances} initialCash={3000} /> */}
+      <FinancialOverview 
+        finances={finances}
+        yearsPlanning={plan?.yearsPlanning || 10}
+        initialCash={plan?.cash || 0}
+        />
       <CreateFinanceDialog
         isLoading={createIsLoading}
         onSubmit={createUpdateAsync}

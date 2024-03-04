@@ -1,15 +1,8 @@
 "use client"
 
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
-import { addMonths, differenceInMonths, format } from 'date-fns'
-
-type Finance = {
-  name: string,
-  amount: number,
-  startDate: Date,
-  endDate: Date,
-  interestRate: number
-}
+import { addMonths, addYears, differenceInMonths, differenceInYears, format } from 'date-fns'
+import { FinancesModel } from "../_hooks/useFinancesData";
 
 const formatDate = (date: Date) => {
   return format(date, 'MMM-yyyy');
@@ -17,85 +10,51 @@ const formatDate = (date: Date) => {
 
 const formatCurrency = (value: number) => `$${value}`
 
-type FinanceChange = {
-  name: string,
-  total: number,
-  change: number,
-}
-
-const financeToChart = (finance: Finance) => {
-  const data = [];
-  const monthlyInterestRate = finance.interestRate / 100 / 12;
-  let currentTotal = finance.amount;
-  for (let i = 0; i < differenceInMonths(finance.endDate, finance.startDate); i++) {
-    const currentDate = addMonths(finance.startDate, i);
-    currentTotal = currentTotal * (1 + monthlyInterestRate);
-    data.push({
-      name: formatDate(currentDate),
-      total: currentTotal,
-      change: currentTotal - finance.amount,
-    })
-  }
-  return data;
-}
-
-const financeToChartMap = (finance: Finance): Map<string, FinanceChange> => {
-  const data = new Map();
-  const generatedData = financeToChart(finance);
-  for (const dataPoint of generatedData) {
-    data.set(dataPoint.name, dataPoint);
-  }
-  return data;
-}
-
-const transformFinancesIntoChart = (finances: Finance[], initialCash: number) => {
+const makeData = (finances: FinancesModel[], initialCash: number, yearsPlanning: number) => {
   const lowestStartDate = finances.reduce((acc, finance) => {
     return finance.startDate < acc ? finance.startDate : acc;
   }, new Date());
-  const highestEndDate = finances.reduce((acc, finance) => {
-    return finance.endDate > acc ? finance.endDate : acc;
-  }, new Date());
-  const fininancesMaps = finances.map(financeToChartMap);
+  const finalEndDate = addYears(new Date(), yearsPlanning);
   const data = [];
 
-  
-  let total = initialCash;
+  let lastTotal = initialCash;
 
-  for (let i = 0; i < differenceInMonths(highestEndDate, lowestStartDate); i++) {
-    let currentChange = 0;
-    let currentTotal = 0;
+  for (let i = 0; i < differenceInMonths(finalEndDate, lowestStartDate); i++) {
     const currentDate = addMonths(lowestStartDate, i);
     const currentName = formatDate(currentDate);
-    fininancesMaps.forEach((financeMap, index) => {
-      const finance = finances[index];
-      if (finance && currentDate >= finance.startDate && currentDate <= finance.endDate) {
-        currentChange += financeMap.get(currentName)?.change || 0;
-        currentTotal += (financeMap.get(currentName)?.total || 0) - (financeMap.get(currentName)?.change || 0);
-      }
-    });
 
-    total = total + currentChange + currentTotal;
+    for (const finance of finances) {
+      if (currentDate >= finance.startDate && (!finance?.endDate || currentDate <= finance.endDate)) {
+        const yearsPassed = differenceInYears(currentDate, finance.startDate);
+        const monthlyAmount = yearsPassed < 1 ?
+          finance.monthlyAmount :
+          finance.monthlyAmount * Math.pow(1 + finance.interestRate / yearsPassed, yearsPassed)
+        const monthlyAmountWithSign = finance.type === "income" ? monthlyAmount : -monthlyAmount;
+        lastTotal += monthlyAmountWithSign;
+      }
+    }
+
     data.push({
       name: currentName,
-      total: (total).toFixed(2),
+      total: lastTotal,
     });
-    
-    total = total - currentTotal;
   }
 
   return data;
 }
 
 type FinancialOverviewProps = {
-  finances: Finance[];
+  finances: FinancesModel[];
   initialCash: number;
+  yearsPlanning: number;
 }
 
-export function FinancialOverview({ finances, initialCash }: FinancialOverviewProps) {
-  //console.log({ finances, initialCash, transformFinancesIntoChart: transformFinancesIntoChart(finances, initialCash) })
+export function FinancialOverview({ finances, initialCash, yearsPlanning }: FinancialOverviewProps) {
+  if (!finances.length) return null;
+
   return (
     <ResponsiveContainer width="100%" height={350}>
-      <BarChart data={transformFinancesIntoChart(finances, initialCash)}>
+      <BarChart data={makeData(finances, initialCash, yearsPlanning)}>
         <XAxis
           dataKey="name"
           stroke="#888888"
@@ -116,7 +75,7 @@ export function FinancialOverview({ finances, initialCash }: FinancialOverviewPr
           radius={[4, 4, 0, 0]}
           className="fill-primary"
         />
-        <Tooltip formatter={formatCurrency} cursor={{fill: "transparent"}} />
+        <Tooltip formatter={formatCurrency} cursor={{ fill: "transparent" }} />
       </BarChart>
     </ResponsiveContainer>
   )
