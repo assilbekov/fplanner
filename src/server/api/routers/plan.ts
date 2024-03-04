@@ -13,7 +13,7 @@ export const planRouter = createTRPCRouter({
         throw new Error("User not found");
       }
 
-      const plan = ctx.db.query.plans.findFirst({
+      const plan = await ctx.db.query.plans.findFirst({
         where: eq(plans.userId, user.id),
       });
       if (!plan) {
@@ -22,7 +22,7 @@ export const planRouter = createTRPCRouter({
           yearsPlanning: 10,
           userId: user.id
         })
-        return await ctx.db.query.plans.findFirst({
+        return ctx.db.query.plans.findFirst({
           where: eq(plans.userId, user.id),
         });
       }
