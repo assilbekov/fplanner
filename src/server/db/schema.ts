@@ -49,6 +49,7 @@ export const finances = createTable(
       .notNull(),
     userId: varchar("user_id").notNull(),
     monthlyAmount: real("monthly_amount").notNull(),
+    interestRate: real("interest_rate").notNull(),
     type: varchar("type", { length: 256 }).notNull(),
     startDate: timestamp("start_date").notNull(),
     endDate: timestamp("end_date"),
