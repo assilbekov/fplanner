@@ -30,8 +30,6 @@ export const ClientPage = (props: ClientPageProps) => {
     updateYearsPlanningIsLoading,
   } = usePlanData({ plan: props.plan });
 
-  console.log({ props, finances, plan })
-
   return (
     <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

@@ -43,8 +43,6 @@ export const FinancesTable = ({ finances }: FinancesTableProps) => {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
-  console.log({finances, data, rowSelection, sorting, columnVisibility, columnFilters});
-
   const table = useReactTable({
     data,
     columns: financesColumns,
