@@ -3,6 +3,9 @@
 import { FinancesModel, useFinancesData } from "../_hooks/useFinancesData"
 import { PlansModel, usePlanData } from "../_hooks/usePlanData";
 import { CashDialog } from "./Cash";
+import { CreateFinanceDialog } from "./CreateFinanceDialog";
+import { FinancesTable } from "./FinancesTable";
+import { FinancialOverview } from "./FinancialOverview";
 import { InfoCard } from "./InfoCard";
 import { YearsPlanningDialog } from "./YearsPlanning";
 
@@ -27,7 +30,7 @@ export const ClientPage = (props: ClientPageProps) => {
     updateYearsPlanningIsLoading,
   } = usePlanData({ plan: props.plan });
 
-  console.log({props, finances, plan})
+  console.log({ props, finances, plan })
 
   return (
     <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
@@ -57,6 +60,17 @@ export const ClientPage = (props: ClientPageProps) => {
           }
         />
       </div>
+      {/* <FinancialOverview finances={finances} initialCash={3000} /> */}
+      <CreateFinanceDialog
+        isLoading={createIsLoading}
+        onSubmit={createUpdateAsync}
+        defaultValues={{
+          type: "income",
+          startDate: new Date(),
+          interestRate: 0,
+        }}
+      />
+      <FinancesTable finances={finances} />
     </div>
   )
 }
