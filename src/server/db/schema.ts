@@ -71,11 +71,10 @@ export const moneyState = createTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
 
-    currentMoney: real("current_money").notNull(),
-    inflation: real("inflation").notNull(),
+    cash: real("cash").notNull(),
     yearsPlanning: real("years_planning").notNull(),
   },
   (example) => ({
-    nameIndex: index("userId").on(example.userId),
+    nameIndex: index("money_state_userId").on(example.userId),
   })
 );
