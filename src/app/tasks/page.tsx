@@ -68,7 +68,7 @@ export default async function TaskPage() {
   const plan = await api.plan.getFirstByUserId.query();
   const finances = await api.finance.getAll.query();
 
-  //console.log(moneyState);
+  console.log({ plan, finances });
 
   return (
     <>
@@ -107,10 +107,10 @@ export default async function TaskPage() {
             <p>{finance.userId}</p>
           </div>
         ))} */}
-        <FinancialOverview finances={financesData} initialCash={3000} />
+        {/* <FinancialOverview finances={financesData} initialCash={3000} /> */}
         {/* <CreateFinanceDialog /> */}
-        <FinancesTable finances={finances} />
-        <DataTable data={tasks} columns={columns} />
+        {/* <FinancesTable finances={finances} />
+        <DataTable data={tasks} columns={columns} /> */}
       </div>
     </>
   )
