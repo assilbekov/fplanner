@@ -58,8 +58,8 @@ export const finances = createTable(
   })
 );
 
-export const moneyState = createTable(
-  "money_state",
+export const plans = createTable(
+  "plan",
   {
     id: serial("id").primaryKey(),
     userId: varchar("user_id").notNull(),
@@ -75,6 +75,6 @@ export const moneyState = createTable(
     yearsPlanning: real("years_planning").notNull(),
   },
   (example) => ({
-    nameIndex: index("money_state_userId").on(example.userId),
+    nameIndex: index("plan_userId").on(example.userId),
   })
 );

@@ -3,9 +3,9 @@ import { currentUser } from "@clerk/nextjs";
 import { eq } from "drizzle-orm";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { moneyState } from "~/server/db/schema";
+import { plans } from "~/server/db/schema";
 
-export const moneyStateRouter = createTRPCRouter({
+export const planRouter = createTRPCRouter({
   getFirstByUserId: publicProcedure
     .query(async ({ ctx }) => {
       const user = await currentUser();
@@ -13,18 +13,18 @@ export const moneyStateRouter = createTRPCRouter({
         throw new Error("User not found");
       }
 
-      const _moneyState = ctx.db.query.moneyState.findFirst({
-        where: eq(moneyState.userId, user.id),
+      const plan = ctx.db.query.plans.findFirst({
+        where: eq(plans.userId, user.id),
       });
-      if (!_moneyState) {
-        return await ctx.db.insert(moneyState).values({
+      if (!plan) {
+        return await ctx.db.insert(plans).values({
           cash: 0,
           yearsPlanning: 10,
           userId: user.id
         });
       }
 
-      return _moneyState
+      return plan
     }),
 
   updateCashByUserId: publicProcedure
@@ -36,9 +36,9 @@ export const moneyStateRouter = createTRPCRouter({
       }
 
       await ctx.db.
-        update(moneyState).
+        update(plans).
         set({ cash: input.cash }).
-        where(eq(moneyState.userId, user.id));
+        where(eq(plans.userId, user.id));
     }),
 
   updateYearsPlanningByUserId: publicProcedure
@@ -50,9 +50,9 @@ export const moneyStateRouter = createTRPCRouter({
       }
 
       await ctx.db.
-        update(moneyState).
+        update(plans).
         set({ yearsPlanning: input.yearsPlanning }).
-        where(eq(moneyState.userId, user.id),);
+        where(eq(plans.userId, user.id),);
     }),
 
   delete: publicProcedure
@@ -62,6 +62,6 @@ export const moneyStateRouter = createTRPCRouter({
         throw new Error("User not found");
       }
 
-      await ctx.db.delete(moneyState).where(eq(moneyState.userId, user.id));
+      await ctx.db.delete(plans).where(eq(plans.userId, user.id));
     }),
 });
