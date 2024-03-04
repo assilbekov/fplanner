@@ -9,7 +9,7 @@ import { eq } from "drizzle-orm";
 export const createFinancePlanFormSchema = z.object({
   name: z.string(),
   type: z.enum(["income", "expense"]),
-  amount: z.number(),
+  monthlyAmount: z.number(),
   interestRate: z.number(),
   startDate: z.date(),
   endDate: z.date().optional(),
