@@ -28,9 +28,20 @@ export const moneyStateRouter = createTRPCRouter({
       if (!user) {
         throw new Error("User not found");
       }
-      return ctx.db.query.moneyState.findFirst({
+
+      const _moneyState = ctx.db.query.moneyState.findFirst({
         where: eq(moneyState.userId, user.id),
       });
+      if (!_moneyState) {
+        return await ctx.db.insert(moneyState).values({
+          currentMoney: 0,
+          inflation: 3.4,
+          yearsPlanning: 10,
+          userId: user.id
+        });
+      }
+
+      return _moneyState
     }),
 
   updateInflation: publicProcedure
