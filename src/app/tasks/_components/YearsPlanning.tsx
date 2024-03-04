@@ -1,6 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
+import { Dispatch, SetStateAction, useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
@@ -21,36 +22,32 @@ import {
   FormMessage,
 } from "~/components/ui/form"
 import { Input } from "~/components/ui/input"
-import { api } from "~/trpc/react"
-//import { api } from "~/trpc/server"
-
 
 const formSchema = z.object({
-  yearsPlanning: z.coerce.number().min(1, { message: "Planning years be at least 1" }),
-})
+  yearsPlanning: z.coerce.number().min(1, { message: "Years of planning be at least 1" }),
+});
 
-type EditYearsPlanningFormProps = {
-  id: number
+export type YearsPlanningInfered = z.infer<typeof formSchema>
+
+export type EditYearsPlanningFormProps = {
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  isLoading: boolean;
+  onSubmit: (values: YearsPlanningInfered) => Promise<void>;
+  defaultValues: Partial<YearsPlanningInfered>;
 }
 
-export function EditYearsPlanningForm() {
-  const {mutate} = api.moneyState.updateYearsPlanning.useMutation();
-  // 1. Define your form.
-  const form = useForm<z.infer<typeof formSchema>>({
+export function EditYearsPlanningForm(props: EditYearsPlanningFormProps) {
+  const form = useForm<YearsPlanningInfered>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      yearsPlanning: 0,
-    },
-  });
+    defaultValues: props.defaultValues,
+  })
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: YearsPlanningInfered) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values)
-    //api.moneyState.updateYearsPlanning.mutate({ yearsPlanning: values.yearsPlanning})
-    //api.moneyState.updateYearsPlanning.mutate({ yearsPlanning: values.yearsPlanning})
-    mutate({ yearsPlanning: values.yearsPlanning});
+    await props.onSubmit(values)
+    props.setOpen(false);
   }
 
   return (
@@ -61,7 +58,7 @@ export function EditYearsPlanningForm() {
           name="yearsPlanning"
           render={({ field }) => (
             <FormItem >
-              <FormLabel>Current value</FormLabel>
+              <FormLabel>Years of planning</FormLabel>
               <FormControl>
                 <Input type="number" {...field} />
               </FormControl>
@@ -70,19 +67,22 @@ export function EditYearsPlanningForm() {
           )}
         />
         <div className="flex justify-end">
-          <Button type="submit">Submit</Button>
+          <Button type="submit" disabled={props.isLoading}>Submit</Button>
         </div>
       </form>
     </Form>
   )
 }
 
+type YearsPlanningDialogProps = Omit<EditYearsPlanningFormProps, "setOpen">;
 
-export function YearsPlanningDialog() {
+export function YearsPlanningDialog(props: YearsPlanningDialogProps) {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="icon" variant="ghost">
+        <Button onClick={() => setOpen(true)} size="icon" variant="ghost">
           <svg
             width="15"
             height="15"
@@ -100,7 +100,7 @@ export function YearsPlanningDialog() {
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Edit years of planning</DialogTitle>
-          <EditYearsPlanningForm />
+          <EditYearsPlanningForm {...props} setOpen={setOpen} />
         </DialogHeader>
       </DialogContent>
     </Dialog>

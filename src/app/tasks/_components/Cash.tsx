@@ -39,9 +39,7 @@ export type EditCashFormProps = {
 export function EditCashForm(props: EditCashFormProps) {
   const form = useForm<CashFormInfered>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      cash: 0,
-    },
+    defaultValues: props.defaultValues,
   })
 
   async function onSubmit(values: CashFormInfered) {
@@ -69,7 +67,7 @@ export function EditCashForm(props: EditCashFormProps) {
           )}
         />
         <div className="flex justify-end">
-          <Button type="submit">Submit</Button>
+          <Button type="submit" disabled={props.isLoading}>Submit</Button>
         </div>
       </form>
     </Form>
