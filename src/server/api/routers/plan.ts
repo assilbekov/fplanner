@@ -17,10 +17,13 @@ export const planRouter = createTRPCRouter({
         where: eq(plans.userId, user.id),
       });
       if (!plan) {
-        return await ctx.db.insert(plans).values({
+        await ctx.db.insert(plans).values({
           cash: 0,
           yearsPlanning: 10,
           userId: user.id
+        })
+        return await ctx.db.query.plans.findFirst({
+          where: eq(plans.userId, user.id),
         });
       }
 

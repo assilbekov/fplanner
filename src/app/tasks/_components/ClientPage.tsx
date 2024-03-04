@@ -1,14 +1,14 @@
 "use client"
 
 import { FinancesModel, useFinancesData } from "../_hooks/useFinancesData"
-import { MoneyStateModel, useMoneyStateData } from "../_hooks/useMoneyStateData";
+import { PlansModel, usePlanData } from "../_hooks/usePlanData";
 import { CashDialog } from "./Cash";
 import { InfoCard } from "./InfoCard";
 import { YearsPlanningDialog } from "./YearsPlanning";
 
 type ClientPageProps = {
   finances: FinancesModel[];
-  moneyState: MoneyStateModel;
+  plan: PlansModel;
 }
 
 export const ClientPage = (props: ClientPageProps) => {
@@ -20,38 +20,36 @@ export const ClientPage = (props: ClientPageProps) => {
     uptateIsLoading
   } = useFinancesData({ finances: props.finances });
   const {
-    moneyState,
-    updateCurrentMoneyMutateAsync,
+    plan,
+    updateCashIsLoading,
+    updateCashMutateAsync,
     updateYearsPlanningMutateAsync,
-    updateCurrentMoneyIsLoading,
     updateYearsPlanningIsLoading,
-  } = useMoneyStateData({ moneyState: props.moneyState });
+  } = usePlanData({ plan: props.plan });
 
   return (
     <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <InfoCard
           title="Cash"
-          value={String(moneyState?.currentMoney || "0")}
+          value={String(plan?.cash || "0")}
           description="How much money in cash you currently have"
           editDialog={
             <CashDialog
-              defaultValues={{ cash: moneyState?.currentMoney }}
-              // TODO: Update later.
-              onSubmit={v => updateCurrentMoneyMutateAsync({ currentMoney: v.cash, id: moneyState?.id || 0 })}
-              isLoading={updateCurrentMoneyIsLoading}
+              defaultValues={{ cash: plan?.cash }}
+              onSubmit={updateCashMutateAsync}
+              isLoading={updateCashIsLoading}
             />
           }
         />
         <InfoCard
           title="Planning years"
-          value={String(moneyState?.yearsPlanning || "10")}
+          value={String(plan?.yearsPlanning || "10")}
           description="For how many years you want to plan"
           editDialog={
             <YearsPlanningDialog
-              defaultValues={{ yearsPlanning: moneyState?.yearsPlanning }}
-              // TODO: Update later.
-              onSubmit={v => updateYearsPlanningMutateAsync({ yearsPlanning: v.yearsPlanning })}
+              defaultValues={{ yearsPlanning: plan?.yearsPlanning }}
+              onSubmit={updateYearsPlanningMutateAsync}
               isLoading={updateYearsPlanningIsLoading}
             />
           }

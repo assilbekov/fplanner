@@ -21,6 +21,7 @@ import { FinancialOverview } from "./_components/FinancialOverview";
 import { YearsPlanningDialog } from "./_components/YearsPlanningDialog";
 import { api } from "~/trpc/server";
 import { FinancesTable } from "./_components/FinancesTable";
+import { ClientPage } from "./_components/ClientPage";
 
 export const metadata: Metadata = {
   title: "Tasks",
@@ -61,8 +62,10 @@ const financesData = [{
 }]
 
 export default async function TaskPage() {
+  noStore();
+
   const tasks = await getTasks()
-  const moneyState = await api.moneyState.getFirstByUserId.query();
+  const plan = await api.plan.getFirstByUserId.query();
   const finances = await api.finance.getAll.query();
 
   //console.log(moneyState);
@@ -74,7 +77,8 @@ export default async function TaskPage() {
         <UserButton />
       </div>
       <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <ClientPage plan={plan!} finances={finances} />
+        {/* <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <InfoCard
             title="Cash"
             value={String(moneyState?.currentMoney || "0")}
@@ -93,8 +97,8 @@ export default async function TaskPage() {
             description="Average inflation rate"
             editDialog={<InflationDialog />}
           />
-        </div>
-        {finances.map((finance) => (
+        </div> */}
+        {/* {finances.map((finance) => (
           <div key={finance.id}>
             <p>{finance.name}</p>
             <p>{finance.amount}</p>
@@ -102,9 +106,9 @@ export default async function TaskPage() {
             <p>{JSON.stringify(finance.endDate)}</p>
             <p>{finance.userId}</p>
           </div>
-        ))}
+        ))} */}
         <FinancialOverview finances={financesData} initialCash={3000} />
-        <CreateFinanceDialog />
+        {/* <CreateFinanceDialog /> */}
         <FinancesTable finances={finances} />
         <DataTable data={tasks} columns={columns} />
       </div>
