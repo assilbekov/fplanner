@@ -1,27 +1,11 @@
 import { z } from "zod";
 import { currentUser } from "@clerk/nextjs";
+import { eq } from "drizzle-orm";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { moneyState } from "~/server/db/schema";
-import { eq } from "drizzle-orm";
-
-
 
 export const moneyStateRouter = createTRPCRouter({
-  getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.db.query.moneyState.findMany({
-      orderBy: (moneyState, { desc }) => [desc(moneyState.updatedAt)],
-    });
-  }),
-
-  get: publicProcedure
-    .input(z.object({ id: z.number() }))
-    .query(async ({ ctx, input }) => {
-      return ctx.db.query.moneyState.findFirst({
-        where: eq(moneyState.id, input.id),
-      });
-    }),
-
   getFirstByUserId: publicProcedure
     .query(async ({ ctx }) => {
       const user = await currentUser();
@@ -34,8 +18,7 @@ export const moneyStateRouter = createTRPCRouter({
       });
       if (!_moneyState) {
         return await ctx.db.insert(moneyState).values({
-          currentMoney: 0,
-          inflation: 3.4,
+          cash: 0,
           yearsPlanning: 10,
           userId: user.id
         });
@@ -44,45 +27,21 @@ export const moneyStateRouter = createTRPCRouter({
       return _moneyState
     }),
 
-  updateInflation: publicProcedure
-    .input(z.object({ id: z.number(), inflation: z.number() }))
+  updateCashByUserId: publicProcedure
+    .input(z.object({ cash: z.number() }))
     .mutation(async ({ ctx, input }) => {
       const user = await currentUser();
       if (!user) {
         throw new Error("User not found");
       }
 
-      const state = await ctx.db.query.moneyState.findFirst({
-        where: eq(moneyState.id, input.id),
-      })
-      if (!state) {
-        await ctx.db.insert(moneyState).values({ inflation: input.inflation, currentMoney: 0, userId: user.id });
-        return;
-      }
-
-      await ctx.db.update(moneyState).set({ inflation: input.inflation }).where(eq(moneyState.id, input.id));
+      await ctx.db.
+        update(moneyState).
+        set({ cash: input.cash }).
+        where(eq(moneyState.userId, user.id));
     }),
 
-  updateCurrentMoney: publicProcedure
-    .input(z.object({ id: z.number(), currentMoney: z.number() }))
-    .mutation(async ({ ctx, input }) => {
-      const user = await currentUser();
-      if (!user) {
-        throw new Error("User not found");
-      }
-
-      const state = await ctx.db.query.moneyState.findFirst({
-        where: eq(moneyState.id, input.id),
-      })
-      if (!state) {
-        await ctx.db.insert(moneyState).values({ currentMoney: input.currentMoney, inflation: 3.4, userId: user.id });
-        return;
-      }
-
-      await ctx.db.update(moneyState).set({ currentMoney: input.currentMoney }).where(eq(moneyState.id, input.id));
-    }),
-
-  updateYearsPlanning: publicProcedure
+  updateYearsPlanningByUserId: publicProcedure
     .input(z.object({ yearsPlanning: z.number() }))
     .mutation(async ({ ctx, input }) => {
       const user = await currentUser();
@@ -90,25 +49,19 @@ export const moneyStateRouter = createTRPCRouter({
         throw new Error("User not found");
       }
 
-      const state = await ctx.db.query.moneyState.findFirst({
-        where: eq(moneyState.userId, user.id),
-      })
-      if (!state) {
-        await ctx.db.insert(moneyState).values({
-          yearsPlanning: input.yearsPlanning,
-          currentMoney: 0,
-          inflation: 3.4,
-          userId: user.id
-        });
-        return;
-      }
-
-      await ctx.db.update(moneyState).set({ yearsPlanning: input.yearsPlanning }).where(eq(moneyState.userId, user.id),);
+      await ctx.db.
+        update(moneyState).
+        set({ yearsPlanning: input.yearsPlanning }).
+        where(eq(moneyState.userId, user.id),);
     }),
 
   delete: publicProcedure
-    .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.delete(moneyState).where(eq(moneyState.id, input.id));
+      const user = await currentUser();
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      await ctx.db.delete(moneyState).where(eq(moneyState.userId, user.id));
     }),
 });
