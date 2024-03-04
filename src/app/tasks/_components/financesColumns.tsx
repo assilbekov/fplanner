@@ -2,12 +2,12 @@
 
 import type { ColumnDef } from "@tanstack/react-table"
 import { InferSelectModel } from "drizzle-orm"
-import { format } from "date-fns";
 
 import { Badge } from "~/components/ui/badge"
 import { finances } from "~/server/db/schema"
 import { DataTableColumnHeader } from "./data-table-column-header"
 import { FinancesTableRowActions } from "./FinancesTableRowActions"
+import { capitalizeFirstLetter, formatDate } from "~/lib/utils";
 
 export const financesColumns: ColumnDef<InferSelectModel<typeof finances>>[] = [
   {
@@ -25,8 +25,8 @@ export const financesColumns: ColumnDef<InferSelectModel<typeof finances>>[] = [
     ),
     cell: ({ row }) => (
       <div className="w-[150px]">
-        <Badge variant={row.getValue("type") !== "income" ? "default" : "destructive"}>
-          {row.getValue("type")}
+        <Badge variant={row.getValue("type") === "income" ? "default" : "destructive"}>
+          {capitalizeFirstLetter(row.getValue("type"))}
         </Badge>
       </div>
     ),
@@ -45,7 +45,7 @@ export const financesColumns: ColumnDef<InferSelectModel<typeof finances>>[] = [
     ),
     cell: ({ row }) => (
       <div className="flex items-center">
-        {format(row.getValue("startDate"), "dd:mm:yyyy")}
+        {formatDate(row.getValue("startDate"))}
       </div>
     ),
   },
@@ -56,7 +56,7 @@ export const financesColumns: ColumnDef<InferSelectModel<typeof finances>>[] = [
     ),
     cell: ({ row }) => (
       <div className="flex items-center">
-        {row.getValue("endDate") ? format(row.getValue("endDate"), "dd:mm:yyyy") : "-"}
+        {row.getValue("endDate") ? formatDate(row.getValue("endDate")) : "-"}
       </div>
     ),
   },
