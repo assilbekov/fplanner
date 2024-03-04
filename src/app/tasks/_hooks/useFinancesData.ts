@@ -7,11 +7,20 @@ export type FinancesModel = InferSelectModel<typeof financesSchema>;
 export const useFinancesData = ({ finances }: {
   finances: FinancesModel[];
 }) => {
-  const { data, refetch } = api.finance.getAll.useQuery(undefined, { initialData: finances });
-  const { mutateAsync: createUpdateAsync, isLoading: createIsLoading } = api.finance.create.useMutation({
+  const { 
+    data, 
+    refetch
+  } = api.finance.getAll.useQuery(undefined, { initialData: finances });
+  const {
+    mutateAsync: createUpdateAsync,
+    isLoading: createIsLoading
+  } = api.finance.create.useMutation({
     onSuccess: () => refetch(),
   });
-  const { mutateAsync: uptateMutateAsync, isLoading: uptateIsLoading } = api.finance.update.useMutation({
+  const {
+    mutateAsync: uptateMutateAsync,
+    isLoading: uptateIsLoading
+  } = api.finance.update.useMutation({
     onSuccess: () => refetch(),
   });
 

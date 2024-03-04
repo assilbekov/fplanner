@@ -3,7 +3,6 @@
 import { InferSelectModel } from "drizzle-orm"
 import { useState } from "react";
 import {
-  ColumnDef,
   ColumnFiltersState,
   SortingState,
   VisibilityState,
