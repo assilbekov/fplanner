@@ -8,8 +8,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog"
-import { FinancePlanForm, FinancePlanFormProps } from "./FinancePlanForm"
-import { use, useState } from "react"
+import { FinancePlanForm } from "./FinancePlanForm"
+import type { FinancePlanFormProps } from "./FinancePlanForm"
+import { useState } from "react"
 
 type CreateFinanceDialogProps = Omit<FinancePlanFormProps, "setOpen">;
 
