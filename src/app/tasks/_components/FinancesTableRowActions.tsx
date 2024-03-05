@@ -18,7 +18,7 @@ import {
   DialogTitle,
 } from "~/components/ui/dialog"
 import { api } from "~/trpc/react"
-import { FinancesModel } from "../_hooks/useFinancesData"
+import type { FinancesModel } from "../_hooks/useFinancesData"
 import { FinancePlanForm } from "./FinancePlanForm"
 
 interface FinancesTableRowActionsProps {
@@ -26,7 +26,7 @@ interface FinancesTableRowActionsProps {
 }
 
 export function FinancesTableRowActions({ row }: FinancesTableRowActionsProps) {
-  const name = row.getValue("name") as string;
+  const name: string = row.getValue("name");
   const [open, setOpen] = useState(false);
   const utils = api.useUtils();
   const { mutateAsync: updateAsyncMutate, isLoading: updateisLoading } = api.finance.update.useMutation({
@@ -74,7 +74,7 @@ export function FinancesTableRowActions({ row }: FinancesTableRowActionsProps) {
               monthlyAmount: row.original.monthlyAmount,
               interestRate: row.original.interestRate,
               startDate: row.original.startDate,
-              endDate: row.original.endDate || undefined
+              endDate: row.original.endDate ?? undefined
             }}
           />
         </DialogContent>
