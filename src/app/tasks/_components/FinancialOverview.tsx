@@ -2,7 +2,7 @@
 
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 import { addMonths, addYears, differenceInMonths, differenceInYears, format } from 'date-fns'
-import { FinancesModel } from "../_hooks/useFinancesData";
+import type { FinancesModel } from "../_hooks/useFinancesData";
 
 const formatDate = (date: Date) => {
   return format(date, 'MMM-yyyy');
