@@ -5,7 +5,6 @@ import { api } from "~/trpc/server";
 
 export default async function Home() {
   noStore();
-  const hello = await api.post.hello.query({ text: "from tRPC" });
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-background">
@@ -39,7 +38,7 @@ export default async function Home() {
         </div>
         <div className="flex flex-col items-center gap-2">
           <p className="text-2xl text-white">
-            {hello ? hello.greeting : "Loading tRPC query..."}
+            "Loading tRPC query..."
           </p>
         </div>
       </div>
