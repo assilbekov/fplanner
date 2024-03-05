@@ -1,11 +1,9 @@
 "use client"
 
-import { InferSelectModel } from "drizzle-orm"
+import type { InferSelectModel } from "drizzle-orm"
 import { useState } from "react";
+import type { ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table"
 import {
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
@@ -15,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { finances } from "~/server/db/schema"
+import type { finances } from "~/server/db/schema"
 import { financesColumns } from "./financesColumns";
 
 import {
