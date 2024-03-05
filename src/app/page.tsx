@@ -1,8 +1,6 @@
 import { unstable_noStore as noStore } from "next/cache";
 import Link from "next/link";
 
-import { api } from "~/trpc/server";
-
 export default async function Home() {
   noStore();
 
@@ -38,7 +36,7 @@ export default async function Home() {
         </div>
         <div className="flex flex-col items-center gap-2">
           <p className="text-2xl text-white">
-            "Loading tRPC query..."
+            Loading tRPC query...
           </p>
         </div>
       </div>
