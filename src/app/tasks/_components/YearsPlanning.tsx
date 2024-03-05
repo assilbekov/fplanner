@@ -1,8 +1,8 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { SetStateAction, useState } from "react"
-import type { Dispatch } from "react"
+import { useState } from "react"
+import type { Dispatch, SetStateAction } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
