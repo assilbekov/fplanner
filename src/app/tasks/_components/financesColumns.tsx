@@ -1,10 +1,10 @@
 "use client"
 
 import type { ColumnDef } from "@tanstack/react-table"
-import { InferSelectModel } from "drizzle-orm"
+import type { InferSelectModel } from "drizzle-orm"
 
 import { Badge } from "~/components/ui/badge"
-import { finances } from "~/server/db/schema"
+import type { finances } from "~/server/db/schema"
 import { DataTableColumnHeader } from "./DataTableColumnHeader"
 import { FinancesTableRowActions } from "./FinancesTableRowActions"
 import { capitalizeFirstLetter, formatDate } from "~/lib/utils";
