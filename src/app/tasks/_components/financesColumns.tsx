@@ -5,7 +5,7 @@ import { InferSelectModel } from "drizzle-orm"
 
 import { Badge } from "~/components/ui/badge"
 import { finances } from "~/server/db/schema"
-import { DataTableColumnHeader } from "./data-table-column-header"
+import { DataTableColumnHeader } from "./DataTableColumnHeader"
 import { FinancesTableRowActions } from "./FinancesTableRowActions"
 import { capitalizeFirstLetter, formatDate } from "~/lib/utils";
 
