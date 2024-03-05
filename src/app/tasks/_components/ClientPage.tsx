@@ -1,7 +1,9 @@
 "use client"
 
-import { FinancesModel, useFinancesData } from "../_hooks/useFinancesData"
-import { PlansModel, usePlanData } from "../_hooks/usePlanData";
+import { useFinancesData } from "../_hooks/useFinancesData"
+import type { FinancesModel } from "../_hooks/useFinancesData"
+import type { PlansModel } from "../_hooks/usePlanData";
+import { usePlanData } from "../_hooks/usePlanData";
 import { CashDialog } from "./Cash";
 import { CreateFinanceDialog } from "./CreateFinanceDialog";
 import { FinancesTable } from "./FinancesTable";
@@ -18,9 +20,7 @@ export const ClientPage = (props: ClientPageProps) => {
   const {
     finances,
     createUpdateAsync,
-    uptateMutateAsync,
     createIsLoading,
-    uptateIsLoading
   } = useFinancesData({ finances: props.finances });
   const {
     plan,
@@ -35,7 +35,7 @@ export const ClientPage = (props: ClientPageProps) => {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <InfoCard
           title="Cash"
-          value={String(plan?.cash || "0")}
+          value={String(plan?.cash ?? "0")}
           description="How much money in cash you currently have"
           editDialog={
             <CashDialog
@@ -47,7 +47,7 @@ export const ClientPage = (props: ClientPageProps) => {
         />
         <InfoCard
           title="Planning years"
-          value={String(plan?.yearsPlanning || "10")}
+          value={String(plan?.yearsPlanning ?? "10")}
           description="For how many years you want to plan"
           editDialog={
             <YearsPlanningDialog
@@ -58,11 +58,11 @@ export const ClientPage = (props: ClientPageProps) => {
           }
         />
       </div>
-      <FinancialOverview 
+      <FinancialOverview
         finances={finances}
-        yearsPlanning={plan?.yearsPlanning || 10}
-        initialCash={plan?.cash || 0}
-        />
+        yearsPlanning={plan?.yearsPlanning ?? 10}
+        initialCash={plan?.cash ?? 0}
+      />
       <CreateFinanceDialog
         isLoading={createIsLoading}
         onSubmit={createUpdateAsync}
