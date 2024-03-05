@@ -21,8 +21,7 @@ import { cn } from "~/lib/utils"
 import { CalendarIcon } from "@radix-ui/react-icons"
 import { Calendar } from "~/components/ui/calendar"
 import { Label } from "~/components/ui/label"
-import { api } from "~/trpc/react"
-import { Dispatch, SetStateAction } from "react"
+import type { Dispatch, SetStateAction } from "react"
 
 export const financeFormSchema = z.object({
   name: z.string().min(1, {
