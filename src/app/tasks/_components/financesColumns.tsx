@@ -36,7 +36,7 @@ export const financesColumns: ColumnDef<InferSelectModel<typeof finances>>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Monthly amount" />
     ),
-    cell: ({ row }) => <div className="flex items-center">{row.getValue("monthlyAmount")}</div>,
+    cell: ({ row }) => <div className="flex items-center">${row.getValue("monthlyAmount")}</div>,
   },
   {
     accessorKey: "interestRate",

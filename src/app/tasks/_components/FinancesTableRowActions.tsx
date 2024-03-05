@@ -1,31 +1,40 @@
 "use client"
 
-import { DotsHorizontalIcon } from "@radix-ui/react-icons"
+import { useState } from "react"
 import type { Row } from "@tanstack/react-table"
+import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 
 import { Button } from "~/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "~/components/ui/dialog"
+import { api } from "~/trpc/react"
+import { FinancesModel } from "../_hooks/useFinancesData"
+import { FinancePlanForm } from "./FinancePlanForm"
 
-interface FinancesTableRowActionsProps<TData> {
-  row: Row<TData>
+interface FinancesTableRowActionsProps {
+  row: Row<FinancesModel>
 }
 
-export function FinancesTableRowActions<TData>({
-  row,
-}: FinancesTableRowActionsProps<TData>) {
+export function FinancesTableRowActions({ row }: FinancesTableRowActionsProps) {
   const name = row.getValue("name") as string;
+  const [open, setOpen] = useState(false);
+  const utils = api.useUtils();
+  const { mutateAsync: updateAsyncMutate, isLoading: updateisLoading } = api.finance.update.useMutation({
+    onSuccess: () => utils.finance.getAll.invalidate()
+  });
+  const { mutate: deleteMutate, isLoading: deleteIsLoading } = api.finance.delete.useMutation({
+    onSuccess: () => utils.finance.getAll.invalidate()
+  });
 
   return (
     <DropdownMenu>
@@ -39,26 +48,37 @@ export function FinancesTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>Edit</DropdownMenuItem>
-        <DropdownMenuItem>Make a copy</DropdownMenuItem>
-        <DropdownMenuItem>Favorite</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
-          <DropdownMenuSubContent>
-            <DropdownMenuRadioGroup value={name}>
-              <DropdownMenuRadioItem value={name}>
-                {name}
-              </DropdownMenuRadioItem>
-            </DropdownMenuRadioGroup>
-          </DropdownMenuSubContent>
-        </DropdownMenuSub>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setOpen(true)}>Edit</DropdownMenuItem>
+        <DropdownMenuItem disabled={deleteIsLoading} onClick={() => deleteMutate({ id: row.original.id })}>
           Delete
-          <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
+          {/* <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut> */}
         </DropdownMenuItem>
       </DropdownMenuContent>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Create financial flow</DialogTitle>
+          </DialogHeader>
+          <FinancePlanForm
+            setOpen={setOpen}
+            isLoading={updateisLoading}
+            onSubmit={async (values) => {
+              await updateAsyncMutate({
+                id: row.original.id,
+                ...values
+              });
+            }}
+            defaultValues={{
+              name,
+              type: row.original.type as "income" | "expense",
+              monthlyAmount: row.original.monthlyAmount,
+              interestRate: row.original.interestRate,
+              startDate: row.original.startDate,
+              endDate: row.original.endDate || undefined
+            }}
+          />
+        </DialogContent>
+      </Dialog>
     </DropdownMenu>
   )
 }
