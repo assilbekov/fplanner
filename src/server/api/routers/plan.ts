@@ -59,7 +59,7 @@ export const planRouter = createTRPCRouter({
     }),
 
   delete: publicProcedure
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ ctx }) => {
       const user = await currentUser();
       if (!user) {
         throw new Error("User not found");
