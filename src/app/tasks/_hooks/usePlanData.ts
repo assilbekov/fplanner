@@ -1,5 +1,5 @@
-import { InferSelectModel } from "drizzle-orm";
-import { plans } from "~/server/db/schema";
+import type { InferSelectModel } from "drizzle-orm";
+import type { plans } from "~/server/db/schema";
 import { api } from "~/trpc/react"
 
 export type PlansModel = InferSelectModel<typeof plans>;
