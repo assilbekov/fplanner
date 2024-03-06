@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description: "Plan your future based on your money flow",
 }
 
-export default async function TaskPage() {
+export default async function Page() {
   noStore();
   const [plan, finances] = await Promise.all([
     api.plan.getFirstByUserId.query(),
