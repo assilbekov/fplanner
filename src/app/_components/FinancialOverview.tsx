@@ -28,7 +28,7 @@ const makeData = (finances: FinancesModel[], initialCash: number, yearsPlanning:
         const yearsPassed = differenceInYears(currentDate, finance.startDate);
         const monthlyAmount = yearsPassed < 1 ?
           finance.monthlyAmount :
-          finance.monthlyAmount * Math.pow(1 + finance.interestRate / yearsPassed, yearsPassed)
+          finance.monthlyAmount * Math.pow(1 + (finance.interestRate * 0.01) / yearsPassed, yearsPassed)
         const monthlyAmountWithSign = finance.type === "income" ? monthlyAmount : -monthlyAmount;
         lastTotal += monthlyAmountWithSign;
       }
