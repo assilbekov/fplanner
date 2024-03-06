@@ -8,7 +8,7 @@ const formatDate = (date: Date) => {
   return format(date, 'MMM-yyyy');
 }
 
-const formatCurrency = (value: number) => `$${value}`
+const formatCurrency = (value: number) => `$${Number(value).toFixed(2)}`
 
 const makeData = (finances: FinancesModel[], initialCash: number, yearsPlanning: number) => {
   const lowestStartDate = finances.reduce((acc, finance) => {
