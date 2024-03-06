@@ -50,8 +50,6 @@ type FinancialOverviewProps = {
 }
 
 export function FinancialOverview({ finances, initialCash, yearsPlanning }: FinancialOverviewProps) {
-  if (!finances.length) return null;
-
   return (
     <ResponsiveContainer width="100%" height={350}>
       <BarChart data={makeData(finances, initialCash, yearsPlanning)}>
