@@ -1,29 +1,15 @@
-# Create T3 App
+# FPlanner
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+This is my pet project to calculate my finances for my future based on my salary and credits, incomes and expences.
 
-## What's next? How do I make an app with this?
+## What is this repository?
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+**FPlanner** is open source product. I used T3 stack - tailwind, typescript, tRPC.
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## How to use the actual product? 
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+Click to the [project link](https://fplanner.vercel.app/). I used Clerk for simple authentication, drizzle for ORM and Postgres for DB and Vercel to deploy. Your data will be stored, so you can check your plans any time. 
 
-## Learn More
-
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
-
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+1. Authenticate 
+2. Click the "Add money flow" button and fill the form.
+3. Observe graph and table changes. 
