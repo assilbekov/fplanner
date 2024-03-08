@@ -50,7 +50,7 @@ export function FinancesTableRowActions({ row }: FinancesTableRowActionsProps) {
       <DropdownMenuContent align="end" className="w-[160px]">
         <DropdownMenuItem onClick={() => setOpen(true)}>Edit</DropdownMenuItem>
         <DropdownMenuItem
-          className="text-white bg-red-500 hover:bg-red-600 focus:bg-red-600 active:text-white hover:text-white focus:text-white"
+          className="text-white bg-red-500 hover:bg-red-600 focus:bg-red-600 active:text-white hover:text-white focus:text-white mt-1"
           disabled={deleteIsLoading}
           onClick={() => deleteMutate({ id: row.original.id })}
         >
