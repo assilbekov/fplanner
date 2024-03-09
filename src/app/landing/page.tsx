@@ -17,7 +17,7 @@ export default async function Page() {
       <div className="border-b flex justify-between items-center px-6 py-4">
         <Label className="text-lg font-bold">FPlanner</Label>
         <Link href="/">
-          <Button size="sm">
+          <Button size="sm" variant="outline">
             Log in
           </Button>
         </Link>
@@ -49,8 +49,7 @@ export default async function Page() {
                 alt=""
                 width={400}
                 height={800}
-                className="pointer-events-none absolute inset-0 h-full w-full"
-                unoptimized
+                className="pointer-events-none absolute inset-0 w-full"
               />
             </div>
           </div>
